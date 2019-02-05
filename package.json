@@ -20,5 +20,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "zeemi",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
+  }
 }
