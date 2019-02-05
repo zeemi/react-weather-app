@@ -1,7 +1,21 @@
 import React from 'react';
+import injectSheet from 'react-jss';
 
-const NotFound = (props) => {
-  return (<div> NotFound</div>)
+const styles = {
+  wrapper: {
+    'backgroundColor': (props) => {
+      return props.color
+    },
+    height: '100%',
+  },
+  label: {'display': 'flex', 'justifyContent': 'center', 'alignItems': 'center'}
 };
 
-export default NotFound
+const NotFound = (props) => {
+  const {classes} = props;
+  return (<div className={classes.wrapper}>
+    <div className={classes.label}>NotFound</div>
+  </div>)
+};
+
+export default injectSheet(styles)(NotFound)

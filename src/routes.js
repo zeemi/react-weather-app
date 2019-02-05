@@ -1,3 +1,4 @@
+import React from 'react'
 import Dashboard from "./components/Dashbord";
 import Register from "./components/Register";
 import Login from "./components/Login";
@@ -21,6 +22,6 @@ export const routes = [
   },
   {
     path:'*',
-    component: NotFound,
+    component: ()=>(<NotFound color={'grey'}/>),
   }
 ];

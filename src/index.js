@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 ReactDom.render(
-  <BrowserRouter>
-    <App/>
-  </BrowserRouter>,
+    <BrowserRouter>
+        <App/>
+    </BrowserRouter>,
   document.getElementById('root'));
