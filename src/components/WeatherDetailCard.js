@@ -12,7 +12,7 @@ class WeatherDetailCard extends React.Component {
   static propTypes = {
     unit: PropTypes.string,
     label: PropTypes.string,
-    value: PropTypes.string
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
   };
 
   render() {

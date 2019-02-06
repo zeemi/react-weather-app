@@ -25,24 +25,25 @@ class CurrentWeatherClass extends React.Component {
   render() {
     const {classes, weatherInfo} = this.props;
 
-    if (!this.props.weatherInfo) {
+    if (!weatherInfo || !weatherInfo.weather) {
       return null;
     }
+    const {weather} = weatherInfo;
 
     return (
       <div>
         <Card className={classes.headerCard}>
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
-                {weatherInfo.name}‚ {weatherInfo.sys.country}
+                {weather.name}‚ {weather.sys.country}
               </Typography>
             </CardContent>
         </Card>
         <div className={classes.detailsContainer}>
-          <WeatherDetailCard label='Temperatura' unit='&deg;C' value={weatherInfo.main.temp}/>
-          <WeatherDetailCard label='Wilgotność' unit='%' value={weatherInfo.main.humidity}/>
-          <WeatherDetailCard label='Prędkość wiatru' unit='m/s' value={weatherInfo.wind.speed}/>
-          <WeatherDetailCard label='Ciśnienie' unit='hPa' value={weatherInfo.main.pressure}/>
+          <WeatherDetailCard label='Temperatura' unit='&deg;C' value={weather.main.temp}/>
+          <WeatherDetailCard label='Wilgotność' unit='%' value={weather.main.humidity}/>
+          <WeatherDetailCard label='Prędkość wiatru' unit='m/s' value={weather.wind.speed}/>
+          <WeatherDetailCard label='Ciśnienie' unit='hPa' value={weather.main.pressure}/>
         </div>
       </div>
     )

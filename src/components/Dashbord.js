@@ -5,6 +5,7 @@ import {fetchCityInfo} from '../libs/openWeatherMapWrapper'
 import {CircularProgress} from "@material-ui/core/es/index";
 import injectSheet from 'react-jss';
 import CurrentWeather from "./CurrentWeather";
+import Forecast from "./Forecast";
 
 const styles = {
   container: {
@@ -37,6 +38,7 @@ class DashboardClass extends React.Component {
       <CityPicker chosenCityId={this.state.chosenCityId} onChange={this.handleCityChange}/>
       {this.state.loading ? <CircularProgress/> : null}
       <CurrentWeather weatherInfo={this.state.chosenCityInfo}/>
+      <Forecast weatherInfo={this.state.chosenCityInfo}/>
     </div>)
   };
 }

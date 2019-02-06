@@ -56,6 +56,3 @@ class CityPickerClass extends React.Component {
 }
 
 export default injectSheet(styles)(CityPickerClass)
-
-
-
