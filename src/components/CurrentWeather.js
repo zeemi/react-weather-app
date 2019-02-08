@@ -1,5 +1,7 @@
 import React from 'react';
-import {Card, CardContent, Typography} from "@material-ui/core/es/index";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
 import injectSheet from 'react-jss';
 import PropTypes from 'prop-types';
 import WeatherDetailCard from "./WeatherDetailCard";

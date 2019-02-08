@@ -25,6 +25,10 @@ class DashboardClass extends React.Component {
     chosenCityInfo: null
   };
 
+  componentDidMount(){
+    this.handleCityChange(3094802)
+  }
+
   handleCityChange = (id) => {
     this.setState({chosenCityId: id, loading: true});
     fetchCityInfo(id).then((chosenCityInfo) => {

@@ -1,8 +1,14 @@
 import React from 'react';
 import injectSheet from 'react-jss';
 import PropTypes from 'prop-types';
+import TempChart from "./TempChart";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
-const styles = {};
+
+const styles = {  headerCard: {
+    margin: '8px',
+  }};
 
 class ForecastClass extends React.Component {
 
@@ -11,8 +17,16 @@ class ForecastClass extends React.Component {
   };
 
   render() {
+    const {weatherInfo, classes} = this.props;
 
-    return <div> chart 1 and chart 2</div>
+    return (
+      <Card className={classes.headerCard}>
+        <CardContent>
+          <TempChart weatherInfo={weatherInfo}/>
+        </CardContent>
+      </Card>
+
+    )
   }
 }
 
