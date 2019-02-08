@@ -6,7 +6,7 @@ import injectSheet from 'react-jss';
 import CurrentWeather from "./CurrentWeather";
 import Forecast from "./Forecast";
 import '../libs/openWeatherMapWrapper';
-import {CityContext} from '../libs/context';
+import {CityContext} from '../libs/cityContext';
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 

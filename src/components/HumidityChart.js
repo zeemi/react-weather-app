@@ -1,7 +1,7 @@
 import React from 'react';
 import injectSheet from 'react-jss';
 import {Bar, BarChart, CartesianGrid, Legend, XAxis, YAxis} from "recharts";
-import {CityContext} from "../libs/context";
+import {CityContext} from "../libs/cityContext";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 

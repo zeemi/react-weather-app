@@ -6,7 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import {CityContext} from "../libs/context";
+import {CityContext} from "../libs/cityContext";
 
 const styles = {  card: {
     margin: '8px',

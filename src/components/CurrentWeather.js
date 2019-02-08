@@ -4,7 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import injectSheet from 'react-jss';
 import WeatherDetailCard from "./WeatherDetailCard";
-import {CityContext} from "../libs/context";
+import {CityContext} from "../libs/cityContext";
 
 const styles = {
   headerCard: {

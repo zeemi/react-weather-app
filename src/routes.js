@@ -4,12 +4,13 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import NotFound from "./components/NotFound";
 import urlsPatterns from "./libs/urlsPatterns";
+import RequireLoginHOC from './components/RequireLoginHOC';
 
 export const routes = [
   {
     path: urlsPatterns.DASHBOARD,
     exact: true,
-    component: Dashboard,
+    component: RequireLoginHOC(Dashboard),
   },
   {
     path: urlsPatterns.LOGIN,
@@ -21,7 +22,7 @@ export const routes = [
     component: Register,
   },
   {
-    path:'*',
-    component: ()=>(<NotFound color={'grey'}/>),
+    path: '*',
+    component: () => (<NotFound color={'grey'}/>),
   }
 ];

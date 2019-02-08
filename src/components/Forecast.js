@@ -1,5 +1,4 @@
 import React from 'react';
-import injectSheet from 'react-jss';
 import TempChart from "./TempChart";
 import HumidityChart from "./HumidityChart";
 
