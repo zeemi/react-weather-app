@@ -15,28 +15,31 @@ const styles = {
 };
 
 class Register extends React.Component {
-
-  state = {
-    submitInProgress: false,
-    submitError: '',
-    fields: {
-      firstName: {
+  constructor(props) {
+    super(props);
+    this.fieldsSchema = [
+      {
+        id: 'name',
         label: 'Imię',
         value: '',
         isDirty: false,
         validations: [{rule: 'required', error: 'To pole jest wymagane.'}],
         validationResult: {isValid: false, errors: []},
-        required: true
+        required: true,
+        autoComplete: 'name'
       },
-      lastName: {
+      {
+        id: 'surname',
         label: 'Nazwisko',
         value: '',
         isDirty: false,
         validations: [{rule: 'required', error: 'To pole jest wymagane.'}],
         validationResult: {isValid: false, errors: []},
-        required: true
+        required: true,
+        autoComplete: 'family-name'
       },
-      email: {
+      {
+        id: 'email',
         label: 'Email',
         value: '',
         isDirty: false,
@@ -45,9 +48,11 @@ class Register extends React.Component {
           error: 'Wprowadz poprawny adres email'
         }],
         validationResult: {isValid: false, errors: []},
-        required: true
+        required: true,
+        autoComplete: 'email'
       },
-      phone: {
+      {
+        id: 'phone',
         label: 'Nr telefonu',
         value: '',
         isDirty: false,
@@ -56,46 +61,103 @@ class Register extends React.Component {
           error: 'Wprowadz poprawny numer telefonu'
         }],
         validationResult: {isValid: false, errors: []},
-        required: true
+        required: true,
+        autoComplete: 'tel'
       },
-      street: {
+      {
+        id: 'street',
         label: 'Ulica',
         value: '',
         isDirty: false,
         validations: [{rule: 'required', error: 'To pole jest wymagane.'}],
         validationResult: {isValid: false, errors: []},
-        required: true
+        required: true,
+        autoComplete: 'street-address'
       },
-      city: {
+      {
+        id: 'city',
         label: 'Miejscowość',
         value: '',
         isDirty: false,
         validations: [{rule: 'required', error: 'To pole jest wymagane.'}],
         validationResult: {isValid: false, errors: []},
-        required: true
+        required: true,
+        autoComplete: 'address-level2'
       },
-      password: {
+      {
+        id: 'password',
         password: true,
         label: 'Hasło',
         value: '',
         isDirty: false,
         validations: [{rule: 'required', error: 'To pole jest wymagane.'}],
         validationResult: {isValid: false, errors: []},
-        required: true
+        required: true,
+        autoComplete: 'off'
       },
-      passwordConfirmation: {
+      {
+        id: 'passwordConfirmation',
         password: true,
         label: 'Powtórz hasło',
         value: '',
         isDirty: false,
         validations: [{rule: 'required', error: 'To pole jest wymagane.'}],
         validationResult: {isValid: false, errors: []},
-        required: true
+        required: true,
+        autoComplete: 'off'
+      },
+    ]
+  }
+
+
+  state = {
+    submitInProgress: false,
+    submitError: '',
+    fields: {
+      name: {
+        value: '',
+        isDirty: false,
+        validationResult: {isValid: false, errors: []},
+      },
+      surname: {
+        value: '',
+        isDirty: false,
+        validationResult: {isValid: false, errors: []},
+      },
+      email: {
+        value: '',
+        isDirty: false,
+        validationResult: {isValid: false, errors: []},
+      },
+      phone: {
+        value: '',
+        isDirty: false,
+        validationResult: {isValid: false, errors: []},
+      },
+      street: {
+        value: '',
+        isDirty: false,
+        validationResult: {isValid: false, errors: []},
+      },
+      city: {
+        value: '',
+        isDirty: false,
+        validationResult: {isValid: false, errors: []},
+      },
+      password: {
+        value: '',
+        isDirty: false,
+        validationResult: {isValid: false, errors: []},
+      },
+      passwordConfirmation: {
+        value: '',
+        isDirty: false,
+        validationResult: {isValid: false, errors: []},
       },
     }
   };
 
-  handleChange = (propertyName) => {
+  handleChange = (propertyName, validations) => {
     return (event) => {
       this.setState({
         fields: {
@@ -104,7 +166,7 @@ class Register extends React.Component {
             ...this.state.fields[propertyName],
             value: event.target.value,
             isDirty: true,
-            validationResult: validate(event.target.value, this.state.fields[propertyName].validations)
+            validationResult: validate(event.target.value, validations)
           }
         }
       }, console.log('change', this.state))
@@ -114,22 +176,28 @@ class Register extends React.Component {
   handleSubmit = (something) => {
     event.preventDefault();
     this.setState({submitError: '', submitInProgress: true});
-    if (this.state.fields.password.value !== this.state.fields.passwordConfirmation.value){
+    if (this.state.fields.password.value !== this.state.fields.passwordConfirmation.value) {
       return this.setState({submitError: 'Hasło się nie zgadza', submitInProgress: false});
     }
 
-    const validationsResults = Object.values(this.state.fields)
-      .map((fieldData) => {
-        return validate(fieldData.value, validations);
-      });
-
-    const validationIsComplete = validationsResults.every((result) => {
-      return result.isValid
+    const fieldsState = {}
+    this.fieldsSchema.forEach((fieldDefinition) => {
+      fieldsState[fieldDefinition.id] = {
+        value: this.state.fields[fieldDefinition.id].value,
+        isDirty: true,
+        validationResult: validate(this.state.fields[fieldDefinition.id].value, fieldDefinition.validations)
+      }
     });
 
-    if (validationIsComplete) {
-      console.log('redirection to login!')
+    const isFormValid = Object.values(fieldsState).every((fieldState) => {
+      return fieldState.validationResult.isValid
+    });
+
+    if (!isFormValid){
+      return this.setState({fields: fieldsState, submitError: 'Popraw błędy powyżej', submitInProgress: false})
     }
+
+    console.log('redirection to login!')
   };
 
   render() {
@@ -140,24 +208,25 @@ class Register extends React.Component {
           <CardHeader title='Zarejestruj'/>
           <CardContent>
             <form className={classes.container} noValidate autoComplete="on" onSubmit={this.handleSubmit}>
-              {Object.keys(this.state.fields).map((fieldName) => {
-                return <TextField key={fieldName}
-                                  label={this.state.fields[fieldName].label}
-                  // autoComplete={'off'}
+              {this.fieldsSchema.map((fieldDefinition) => {
+                return <TextField key={fieldDefinition.id}
+                                  label={fieldDefinition.label}
+                                  autoComplete={fieldDefinition.autoComplete}
                                   required
                                   fullWidth
-                                  error={this.state.fields[fieldName].isDirty && !this.state.fields[fieldName].validationResult.isValid}
-                                  helperText={this.state.fields[fieldName].isDirty && this.state.fields[fieldName].validationResult.errors.join(' ')}
-                                  value={this.state.fields[fieldName].value}
-                                  onFocus={this.handleChange(fieldName)}
-                                  onChange={this.handleChange(fieldName)}
+                                  error={this.state.fields[fieldDefinition.id].isDirty && !this.state.fields[fieldDefinition.id].validationResult.isValid}
+                                  helperText={this.state.fields[fieldDefinition.id].isDirty && this.state.fields[fieldDefinition.id].validationResult.errors.join(' ')}
+                                  value={this.state.fields[fieldDefinition.id].value}
+                                  onFocus={this.handleChange(fieldDefinition.id, fieldDefinition.validations)}
+                                  onChange={this.handleChange(fieldDefinition.id, fieldDefinition.validations)}
                                   margin="normal"
-                                  type={this.state.fields[fieldName].password ? 'password' : 'text '}
+                                  type={fieldDefinition.password ? 'password' : 'text '}
                 />
               })
               }
-              <div><Button fullWidth className={classes.submitButton} disabled={this.state.submitInProgress} type='submit' variant='contained'>Załóż konto</Button></div>
-              {this.state.submitError ? <Typography color={'error'}>{this.state.submitError}</Typography>: null}
+              {this.state.submitError ? <Typography color={'error'}>{this.state.submitError}</Typography> : null}
+              <div><Button fullWidth className={classes.submitButton} disabled={this.state.submitInProgress}
+                           type='submit' variant='contained'>Załóż konto</Button></div>
             </form>
           </CardContent>
         </Card>
