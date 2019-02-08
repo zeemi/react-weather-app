@@ -7,6 +7,8 @@ import CurrentWeather from "./CurrentWeather";
 import Forecast from "./Forecast";
 import '../libs/openWeatherMapWrapper';
 import {CityContext} from '../libs/context';
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 const styles = {
   container: {
@@ -21,7 +23,7 @@ const styles = {
 class DashboardClass extends React.Component {
   state = {
     chosenCityId: '',
-    loaded: false,
+    error: null,
     loading: false,
     chosenCityInfo: null
   };
@@ -31,17 +33,27 @@ class DashboardClass extends React.Component {
   }
 
   handleCityChange = (id) => {
-    this.setState({chosenCityId: id, loading: true});
-    fetchCityInfo(id).then((chosenCityInfo) => {
-      this.setState({loading: false, chosenCityInfo})
+    this.setState({chosenCityId: id, loading: true, chosenCityInfo: null});
+    fetchCityInfo(id)
+      .then((chosenCityInfo) => {
+        this.setState({loading: false, chosenCityInfo})
+      }).catch((error) => {
+      this.setState({loading: false, error});
     })
+
   };
 
   render() {
     const {classes} = this.props;
+
     return (<div className={classes.container}>
       <CityPicker chosenCityId={this.state.chosenCityId} onChange={this.handleCityChange}/>
       {this.state.loading ? <CircularProgress/> : null}
+      {!this.state.loading && this.state.error
+        ? <div>
+          <Typography>Coś poszło nie tak. <Button variant="contained" onClick={() => this.handleCityChange(this.state.chosenCityId)}>Spróbuj ponownie</Button></Typography>
+        </div>
+        : null}
       <CityContext.Provider value={this.state.chosenCityInfo}>
         <CurrentWeather/>
         <Forecast/>
