@@ -6,36 +6,24 @@ const WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather';
 const cityInfoCache = {};
 
 
-const fetchWeather = (id) => {
-  if (cityInfoCache[id] && cityInfoCache[id].weather) {
+const fetchAndCache = (cityId, url, cacheKey) => {
+  if (cityInfoCache[cityId] && cityInfoCache[cityId][cacheKey]){
     return Promise.resolve()
   }
 
-  return fetch(`${WEATHER_URL}?id=${id}&mode=json&units=metric&appid=${config.openWeatherMapKey}`)
+  return fetch(`${url}?id=${cityId}&mode=json&units=metric&appid=${config.openWeatherMapKey}`)
     .then((response) => {
-      return response.json();
+      return response.json()
     })
-    .then((myJson) => {
-      cityInfoCache[id] = {...cityInfoCache[id], ...{weather: myJson}};
-    });
+    .then((jsonData) => {
+      cityInfoCache[cityId] = {...cityInfoCache[cityId], ...{[cacheKey]: jsonData}}
+    })
 };
 
-const fetchForecast = (id) => {
-  if (cityInfoCache[id] && cityInfoCache[id].forecast) {
-    return Promise.resolve()
-  }
-
-  return fetch(`${FORECAST_URL}?id=${id}&mode=json&units=metric&appid=${config.openWeatherMapKey}`)
-    .then((response) => {
-      return response.json();
-    })
-    .then((myJson) => {
-      cityInfoCache[id] = {...cityInfoCache[id], ...{forecast: myJson}};
+export const fetchCityInfo = (cityId) => {
+  return Promise
+    .all([fetchAndCache(cityId, WEATHER_URL, 'weather'), fetchAndCache(cityId, FORECAST_URL, 'forecast')])
+    .then(() => {
+      return cityInfoCache[cityId]
     });
-};
-
-export const fetchCityInfo = (id) => {
-  return Promise.all([fetchForecast(id), fetchWeather(id)]).then(() => {
-    return cityInfoCache[id]
-  });
 };
