@@ -1,41 +1,46 @@
 import React from 'react';
 import injectSheet from 'react-jss';
-import PropTypes from 'prop-types';
-import {Bar, BarChart, CartesianGrid, Legend, Line, LineChart, XAxis, YAxis} from "recharts";
+import {Bar, BarChart, CartesianGrid, Legend, XAxis, YAxis} from "recharts";
+import {CityContext} from "../libs/context";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
-
-const styles = {};
+const styles = {  card: {
+    margin: '8px',
+  }};
 
 class TempChartClass extends React.Component {
-
-  static propTypes = {
-    weatherInfo: PropTypes.object
-  };
-
   render() {
-    const {weatherInfo} = this.props;
-
-    if (!weatherInfo || !weatherInfo.forecast) {
-      return null
-    }
-    const {forecast} = weatherInfo;
-
     return (
-      <div>
-        <BarChart width={500} height={300} data={forecast.list.map((info) => {
-          return {
-            humidity: info.main.humidity,
+      <CityContext.Consumer>
+        {(weatherInfo) => {
+          if (!weatherInfo || !weatherInfo.forecast) {
+            return null
           }
-        })}>
-          <XAxis dataKey="dt_txt"/>
-          <YAxis unit="%"/>
-          <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
-          <Bar name="wilgotność" dataKey="humidity" fill='lightblue'/>
-          <Legend verticalAlign="bottom" height={36}/>
-        </BarChart>
+          const {forecast} = weatherInfo;
+          const {classes} = this.props;
 
-      </div>
-    )
+          return (
+            <Card className={classes.card}>
+              <CardContent>
+                <BarChart width={500} height={300} data={forecast.list.map((info) => {
+                  return {
+                    humidity: info.main.humidity,
+                  }
+                })}>
+                  <XAxis dataKey="dt_txt"/>
+                  <YAxis unit="%"/>
+                  <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
+                  <Bar name="wilgotność" dataKey="humidity" fill='lightblue'/>
+                  <Legend verticalAlign="bottom" height={36}/>
+                </BarChart>
+              </CardContent>
+            </Card>
+          )
+        }}
+      </CityContext.Consumer>
+    );
+
   }
 }
 

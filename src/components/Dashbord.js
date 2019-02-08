@@ -1,11 +1,12 @@
 import React from 'react';
-import '../libs/openWeatherMapWrapper';
 import CityPicker from "./CityPicker";
 import {fetchCityInfo} from '../libs/openWeatherMapWrapper'
 import {CircularProgress} from "@material-ui/core/es/index";
 import injectSheet from 'react-jss';
 import CurrentWeather from "./CurrentWeather";
 import Forecast from "./Forecast";
+import '../libs/openWeatherMapWrapper';
+import {CityContext} from '../libs/context';
 
 const styles = {
   container: {
@@ -25,7 +26,7 @@ class DashboardClass extends React.Component {
     chosenCityInfo: null
   };
 
-  componentDidMount(){
+  componentDidMount() {
     this.handleCityChange(3094802)
   }
 
@@ -41,8 +42,10 @@ class DashboardClass extends React.Component {
     return (<div className={classes.container}>
       <CityPicker chosenCityId={this.state.chosenCityId} onChange={this.handleCityChange}/>
       {this.state.loading ? <CircularProgress/> : null}
-      <CurrentWeather weatherInfo={this.state.chosenCityInfo}/>
-      <Forecast weatherInfo={this.state.chosenCityInfo}/>
+      <CityContext.Provider value={this.state.chosenCityInfo}>
+        <CurrentWeather/>
+        <Forecast/>
+      </CityContext.Provider>
     </div>)
   };
 }
