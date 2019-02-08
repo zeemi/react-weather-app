@@ -1,12 +1,8 @@
 import React from 'react';
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import injectSheet from 'react-jss';
-import {validate} from "../libs/validationHelper";
+import Form from "./Form";
+import {withRouter} from "react-router-dom";
+import urlsPatterns from "../libs/urlsPatterns";
 
 const styles = {
   wrapper: {display: 'flex', justifyContent: 'center'},
@@ -109,130 +105,27 @@ class Register extends React.Component {
     ]
   }
 
+  handleSubmit = (fields) => {
+    return new Promise((resolve, reject) => {
+      //  fake api call
 
-  state = {
-    submitInProgress: false,
-    submitError: '',
-    fields: {
-      name: {
-        value: '',
-        isDirty: false,
-        validationResult: {isValid: false, errors: []},
-      },
-      surname: {
-        value: '',
-        isDirty: false,
-        validationResult: {isValid: false, errors: []},
-      },
-      email: {
-        value: '',
-        isDirty: false,
-        validationResult: {isValid: false, errors: []},
-      },
-      phone: {
-        value: '',
-        isDirty: false,
-        validationResult: {isValid: false, errors: []},
-      },
-      street: {
-        value: '',
-        isDirty: false,
-        validationResult: {isValid: false, errors: []},
-      },
-      city: {
-        value: '',
-        isDirty: false,
-        validationResult: {isValid: false, errors: []},
-      },
-      password: {
-        value: '',
-        isDirty: false,
-        validationResult: {isValid: false, errors: []},
-      },
-      passwordConfirmation: {
-        value: '',
-        isDirty: false,
-        validationResult: {isValid: false, errors: []},
-      },
-    }
-  };
-
-  handleChange = (propertyName, validations) => {
-    return (event) => {
-      this.setState({
-        fields: {
-          ...this.state.fields,
-          [propertyName]: {
-            ...this.state.fields[propertyName],
-            value: event.target.value,
-            isDirty: true,
-            validationResult: validate(event.target.value, validations)
-          }
-        }
-      }, console.log('change', this.state))
-    }
-  };
-
-  handleSubmit = (something) => {
-    event.preventDefault();
-    this.setState({submitError: '', submitInProgress: true});
-    if (this.state.fields.password.value !== this.state.fields.passwordConfirmation.value) {
-      return this.setState({submitError: 'Hasło się nie zgadza', submitInProgress: false});
-    }
-
-    const fieldsState = {}
-    this.fieldsSchema.forEach((fieldDefinition) => {
-      fieldsState[fieldDefinition.id] = {
-        value: this.state.fields[fieldDefinition.id].value,
-        isDirty: true,
-        validationResult: validate(this.state.fields[fieldDefinition.id].value, fieldDefinition.validations)
+      if (fields.password.value !== fields.passwordConfirmation.value) {
+        return reject('Hasła się nie zgadzają.')
       }
-    });
 
-    const isFormValid = Object.values(fieldsState).every((fieldState) => {
-      return fieldState.validationResult.isValid
-    });
-
-    if (!isFormValid){
-      return this.setState({fields: fieldsState, submitError: 'Popraw błędy powyżej', submitInProgress: false})
-    }
-
-    console.log('redirection to login!')
+      // todo: add newly created user to base
+      return resolve(this.props.history.push(urlsPatterns.LOGIN))
+    })
   };
 
   render() {
     const {classes} = this.props;
     return (
       <div className={classes.wrapper}>
-        <Card className={classes.card}>
-          <CardHeader title='Zarejestruj'/>
-          <CardContent>
-            <form className={classes.container} noValidate autoComplete="on" onSubmit={this.handleSubmit}>
-              {this.fieldsSchema.map((fieldDefinition) => {
-                return <TextField key={fieldDefinition.id}
-                                  label={fieldDefinition.label}
-                                  autoComplete={fieldDefinition.autoComplete}
-                                  required
-                                  fullWidth
-                                  error={this.state.fields[fieldDefinition.id].isDirty && !this.state.fields[fieldDefinition.id].validationResult.isValid}
-                                  helperText={this.state.fields[fieldDefinition.id].isDirty && this.state.fields[fieldDefinition.id].validationResult.errors.join(' ')}
-                                  value={this.state.fields[fieldDefinition.id].value}
-                                  onFocus={this.handleChange(fieldDefinition.id, fieldDefinition.validations)}
-                                  onChange={this.handleChange(fieldDefinition.id, fieldDefinition.validations)}
-                                  margin="normal"
-                                  type={fieldDefinition.password ? 'password' : 'text '}
-                />
-              })
-              }
-              {this.state.submitError ? <Typography color={'error'}>{this.state.submitError}</Typography> : null}
-              <div><Button fullWidth className={classes.submitButton} disabled={this.state.submitInProgress}
-                           type='submit' variant='contained'>Załóż konto</Button></div>
-            </form>
-          </CardContent>
-        </Card>
+        <Form onSubmit={this.handleSubmit}/>
       </div>)
   }
 }
 
 
-export default injectSheet(styles)(Register)
+export default withRouter(injectSheet(styles)(Register))
