@@ -7,7 +7,7 @@ import {AuthContext} from "../libs/authContext";
 class App extends React.Component {
   state = {
     isLogged: false,
-    loggedUserEmail: {},
+    loggedUserEmail: '',
     userDatabase: {},
     registerUser: (fields) => {
       return new Promise((resolve, reject) => {
@@ -22,9 +22,14 @@ class App extends React.Component {
       })
     },
     logUserIn: (email, password) => {
-      this.setState()
+      return new Promise((resolve, reject) => {
+        if (this.state.userDatabase[email] && this.state.userDatabase[email].password.value === password) {
+          this.setState({isLogged: true, loggedUserEmail: email}, () => {resolve()})
+        } else {
+          reject('Niepoprawne dane do logowania.')
+        }
+      });
     },
-
   };
 
   render() {
@@ -35,6 +40,6 @@ class App extends React.Component {
       </AuthContext.Provider>
     )
   }
-};
+}
 
 export default App
